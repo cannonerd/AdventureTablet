@@ -1,7 +1,10 @@
+
+
 class Point
 {
     double lat;
     double lon;
+
 
     public Point(double latitude, double longitude)
     {
@@ -9,29 +12,52 @@ class Point
         this.lon = longitude;
     }
 
+/**
+ * Metodi korvaamaan Math.luokan samaa, katoaa tod näk myöhemmin.
+ * 
+ *
+ * @param   toRadians  degrees
+ * 
+ * @return degrees in radians 
+ */
+
     private double toRadians(double degrees)
     {
         return (degrees * Math.PI / 180.0);
     }
 
+/**
+ * Mettodi joka kertoo etäisyyden kahden pisteen välillä
+ * 
+ *
+ * @param   distanceTo   location, latitude and longitude
+ * 
+ * @return Distance in 
+ */
+
 	public double distanceTo(Point to)
     {
-        double startLon = toRadians(lon); //start_long = math.radians(self.lon)
-        double startLat = toRadians(lat);//start_latt = math.radians(self.lat)
+        double startLon = toRadians(lon); 
+        double startLat = toRadians(lat);
         double endLon  = toRadians(to.lon);
-        double endLat = toRadians(to.lat);//end_latt = math.radians(point.lat)
+        double endLat = toRadians(to.lat);
 
-        double dLat = endLat - startLat;//d_latt = end_latt - start_latt
-        double dLon = endLon - startLon;//d_long = end_long - start_long
+        double dLat = endLat - startLat;
+        double dLon = endLon - startLon;
         double a = Math.pow(Math.sin(dLat/2.0), 2) + Math.cos(startLat) * Math.cos(endLat) * Math.pow(Math.sin(dLon/2.0),2);
-        //a = math.sin(d_latt/2)**2 + math.cos(start_latt) * math.cos(end_latt) * math.sin(d_long/2)**2
         double c = 2.0 * Math.atan2(Math.sqrt(a),  Math.sqrt(1.0-a));     
-        //c = 2 * math.atan2(math.sqrt(a),  math.sqrt(1-a))
-        return 6371.0 * c;
+       return 6371.0 * c;
 
     }
 
-
+/**
+ * Metodi kertoo kompassisuuntiman lähtöpisteestä loppupisteeseen. Sijainnin siirtyessä suuntima 
+ * lasketaan uudelleen.
+ *
+ * @param   bearingTo location and end point latitudes and longitudes
+ * 
+ * @return bearing in degrees 
+ */
     public double bearingTo(Point to)
     {
         double distance = distanceTo(to);    
@@ -49,25 +75,49 @@ class Point
         double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLong);
         double result = Math.toDegrees(Math.atan2(y, x));
         return (result + 360.0) % 360.0;
-/*
-        double arad = 
-Math.acos((Math.sin(Math.toRadians(to.lat)) -    //acos((sin(deg2rad($to->latitude)) -
- Math.sin(Math.toRadians(lat)) *                 //sin(deg2rad($this->latitude)) * 
- Math.cos(Math.toRadians(distance / 60.0))) /    // cos(deg2rad($dist / 60))) / 
-(Math.sin(Math.toRadians(distance / 60.0)) *     //(sin(deg2rad($dist / 60)) * 
-Math.cos(Math.toRadians(lat))));                 //cos(deg2rad($this->latitude))));
-        System.out.println("arad " + Double.toString(arad));
-        double bearing = arad * 180.0 / Math.PI; //$bearing = $arad * 180 / pi();
-        if (Math.sin(Math.toRadians(to.lon - lon)) < 0.0) //if (sin(deg2rad($to->longitude - $this->longitude)) < 0)
-        {
-            bearing = 360.0 - bearing; //$bearing = 360 - $bearing;
-        }
-        
-        return bearing;
-*/
+
 
     }
-}	
+	
+    public String PrettyPrintCoordinate(double coordinate)
+    {
+        double deg = Math.abs(coordinate);
+        int degrees = (int) Math.floor(deg);
+        double min = 60.0 * (deg - degrees);
+        int minutes = (int) min;
+        double sec = 60 *  (min - minutes);
+        int seconds = (int) sec;
+        String degr  = Integer.toString(degrees);
+        String minu  = Integer.toString(minutes);
+        String seco  = Integer.toString(seconds);
+        String coordinates = degrees +" "+ minutes +" "+seconds;  
+        return coordinates;
+    }
 
-
-
+    /**
+     * Could just be toString?
+     */
+    public String PrettyPrint()
+    {
+        String lati = PrettyPrintCoordinate(lat);
+        String longi = PrettyPrintCoordinate(lon);
+        
+        if (lat > 0.0)
+        {
+            lati = lati + " N";
+        }
+        else
+        {
+            lati = lati + " S";
+        }
+        if (lon > 0.0)
+        {
+            longi = longi + " E";
+        }
+        else
+        {
+            longi = longi + " W";
+        }
+        return lati + " " + longi;
+   }
+}

@@ -48,4 +48,9 @@ public class PointTest {
     public void bearingLong() {
         assertEquals(187, efhf.bearingTo(fymg), 0.2);
     }
+    
+    /*@Test
+    public void prettyPrint() {
+        assertTrue("60 19 1 N 24 57 47 E﻿".equals(efhk.PrettyPrint()));
+    }*/
 }   
