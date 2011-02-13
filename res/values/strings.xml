@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Adventure Tablet</string>
+    <string name="destination">destination</string>
+    <string name="home">home</string>
+    <string name="settings">settings</string>
+    <string name="about">about</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
 </resources>

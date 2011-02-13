@@ -1,6 +1,8 @@
+package com.wordpress.cannonerd;
 
+import com.google.android.maps.GeoPoint;
 
-class Point
+public class Point extends GeoPoint
 {
     double lat;
     double lon;
@@ -8,8 +10,14 @@ class Point
 
     public Point(double latitude, double longitude)
     {
+        super((int) (latitude * 1E6), (int) (longitude * 1E6));
         this.lat = latitude;
         this.lon = longitude;
+    }
+
+    public Point(int latitudeE6, int longitudeE6)
+    {
+        this((double) (latitudeE6 / 1E6), (double) (longitudeE6 / 1E6));
     }
 
 /**
