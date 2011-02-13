@@ -13,7 +13,7 @@ class Point
     }
 
 /**
- * Metodi korvaamaan Math.luokan samaa, katoaa tod näk myöhemmin.
+ * Metodi korvaamaan Math.luokan samaa, katoaa tod nak myohemmin.
  * 
  *
  * @param   toRadians  degrees
@@ -27,7 +27,7 @@ class Point
     }
 
 /**
- * Mettodi joka kertoo etäisyyden kahden pisteen välillä
+ * Mettodi joka kertoo etaisyyden kahden pisteen valilla
  * 
  *
  * @param   distanceTo   location, latitude and longitude
@@ -51,7 +51,7 @@ class Point
     }
 
 /**
- * Metodi kertoo kompassisuuntiman lähtöpisteestä loppupisteeseen. Sijainnin siirtyessä suuntima 
+ * Metodi kertoo kompassisuuntiman lahtopisteesta loppupisteeseen. Sijainnin siirtyessa suuntima 
  * lasketaan uudelleen.
  *
  * @param   bearingTo location and end point latitudes and longitudes
@@ -118,6 +118,7 @@ class Point
         {
             longi = longi + " W";
         }
-        return lati + " " + longi;
+        String total = new String(lati +" "+ longi); 
+       return total;
    }
 }
