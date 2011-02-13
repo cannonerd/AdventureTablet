@@ -55,7 +55,10 @@ public class AdventureMapView extends MapActivity {
     public void onHomeClicked(){
         // Center the map to player
         mode = "home";
-        CenterLocation(userLocation);
+
+        if (userLocation != null) {
+            CenterLocation(userLocation);
+        }
     }
 
     public void onSettingsClicked(){
@@ -78,6 +81,13 @@ public class AdventureMapView extends MapActivity {
         locationListener = new AdventureLocationListener();
 
         locationManager.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER,
+            0,
+            0,
+            locationListener
+        );
+
+        locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
             0,
             0,
@@ -85,14 +95,21 @@ public class AdventureMapView extends MapActivity {
         );
 
         // Start with user's remembered location
-        userLocation = new Point(
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude()
-        );
-        Log.d(TAG, "Initialized with user location " + userLocation.PrettyPrint());
+        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (lastLocation != null) {
+            userLocation = new Point(
+                lastLocation.getLatitude(),
+                lastLocation.getLongitude()
+            );
+            Log.d(TAG, "Initialized with user location " + userLocation.PrettyPrint());
+        }
     }
 
     private void updateGeohash() {
+        if (userLocation == null) {
+            return;
+        }
+
         // Calculate geohash
         try
         {
@@ -127,9 +144,12 @@ public class AdventureMapView extends MapActivity {
         mapController = mapView.getController();
 
         prepareLocationServices();
-        CenterLocation(userLocation);
 
-        updateGeohash();
+        if (userLocation != null) {
+            CenterLocation(userLocation);
+
+            updateGeohash();
+        }
     }
 
     private class AdventureLocationListener implements LocationListener {
