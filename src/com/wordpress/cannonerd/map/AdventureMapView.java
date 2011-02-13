@@ -33,6 +33,7 @@ public class AdventureMapView extends MapActivity {
     TextView destinationText;
 
     private AdventureItemizedOverlay playerOverlay;
+    private OverlayItem playerMarker;
 
     private String mode = "geohash";
     private Point userLocation;
@@ -135,6 +136,30 @@ public class AdventureMapView extends MapActivity {
         }
     }
 
+    private void updatePlayerOnMap() {
+        if (userLocation == null) {
+            // No user location, skip placing on map
+            Log.d(TAG, "Skipping player update, no location");
+            return;
+        }
+
+        if (playerOverlay == null) {
+            // No overlay set, define
+            Log.d(TAG, "Defining map overlay");
+            Drawable drawable = this.getResources().getDrawable(R.drawable.red); 
+    		playerOverlay = new AdventureItemizedOverlay(drawable);
+    		mapView.getOverlays().add(playerOverlay);
+        }
+
+        if (playerMarker != null) {
+            Log.d(TAG, "Removing player marker");
+            playerOverlay.removeItem(playerMarker);
+        }
+
+        playerMarker = new OverlayItem(userLocation, "You", "You are here");
+        playerOverlay.addItem(playerMarker);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,16 +173,10 @@ public class AdventureMapView extends MapActivity {
 
         mapController = mapView.getController();
 
-        Drawable drawable = this.getResources().getDrawable(R.drawable.red); 
-		AdventureItemizedOverlay playerOverlay = new AdventureItemizedOverlay(drawable);
-		mapView.getOverlays().add(playerOverlay);
-
         prepareLocationServices();
 
         if (userLocation != null) {
-
-            OverlayItem overlayitem = new OverlayItem(userLocation, "You", "You are here");
-            playerOverlay.addItem(overlayitem);
+            updatePlayerOnMap();
 
             CenterLocation(userLocation);
 
@@ -174,10 +193,7 @@ public class AdventureMapView extends MapActivity {
             );
 
             userLocation = myPoint;
-
-            OverlayItem overlayitem = new OverlayItem(userLocation, "You", "You are here");
-            playerOverlay.clearItems();
-            playerOverlay.addItem(overlayitem);
+            updatePlayerOnMap();
 
             if (mode == "home") {
                 CenterLocation(userLocation);
