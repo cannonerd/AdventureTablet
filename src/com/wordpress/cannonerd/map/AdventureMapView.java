@@ -12,6 +12,10 @@ import android.view.MenuItem;
 // Other widgets
 import android.widget.TextView;
 
+// Map overlays
+import android.graphics.drawable.Drawable;
+import com.google.android.maps.OverlayItem;
+
 // Location
 import android.content.Context;
 import android.location.Location;
@@ -27,6 +31,8 @@ public class AdventureMapView extends MapActivity {
 
     MapView mapView;
     TextView destinationText;
+
+    private AdventureItemizedOverlay playerOverlay;
 
     private String mode = "geohash";
     private Point userLocation;
@@ -127,7 +133,6 @@ public class AdventureMapView extends MapActivity {
         {
             Log.d(TAG, "Failed to get GeoHash", e);
         }
-
     }
 
     @Override
@@ -143,9 +148,17 @@ public class AdventureMapView extends MapActivity {
 
         mapController = mapView.getController();
 
+        Drawable drawable = this.getResources().getDrawable(R.drawable.red); 
+		AdventureItemizedOverlay playerOverlay = new AdventureItemizedOverlay(drawable);
+		mapView.getOverlays().add(playerOverlay);
+
         prepareLocationServices();
 
         if (userLocation != null) {
+
+            OverlayItem overlayitem = new OverlayItem(userLocation, "You", "You are here");
+            playerOverlay.addItem(overlayitem);
+
             CenterLocation(userLocation);
 
             updateGeohash();
