@@ -175,6 +175,10 @@ public class AdventureMapView extends MapActivity {
 
             userLocation = myPoint;
 
+            OverlayItem overlayitem = new OverlayItem(userLocation, "You", "You are here");
+            playerOverlay.clearItems();
+            playerOverlay.addItem(overlayitem);
+
             if (mode == "home") {
                 CenterLocation(userLocation);
             }
