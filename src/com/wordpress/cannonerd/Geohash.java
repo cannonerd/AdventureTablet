@@ -33,9 +33,11 @@ public class Geohash
     {
         DateFormat urlDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         DateFormat hashDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String djia = fetchURL("http://irc.peeron.com/xkcd/map/data/" + urlDateFormat.format(new Date()));
+        Date today = new Date();
 
-        String hash = MD5Tools.MD5hash(hashDateFormat.format(new Date()) + "-" + djia);
+        String djia = fetchURL("http://irc.peeron.com/xkcd/map/data/" + urlDateFormat.format(today));
+
+        String hash = MD5Tools.MD5hash(hashDateFormat.format(today) + "-" + djia);
         double hashLat = HexFraction.calculate(hash.substring(0, 16));
         double hashLon = HexFraction.calculate(hash.substring(16, 32));
 

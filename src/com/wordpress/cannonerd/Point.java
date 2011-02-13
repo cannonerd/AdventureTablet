@@ -98,7 +98,7 @@ public class Point extends GeoPoint
         String degr  = Integer.toString(degrees);
         String minu  = Integer.toString(minutes);
         String seco  = Integer.toString(seconds);
-        String coordinates = degrees +" "+ minutes +" "+seconds;  
+        String coordinates = degrees +"\u00b0"+ minutes +"\u2032"+seconds+"\u2033";  
         return coordinates;
     }
 
@@ -126,7 +126,7 @@ public class Point extends GeoPoint
         {
             longi = longi + " W";
         }
-        String total = new String(lati +" "+ longi); 
-       return total;
+        String total = new String(lati + ", " + longi); 
+        return total;
    }
 }

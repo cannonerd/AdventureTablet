@@ -9,16 +9,10 @@
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content">
         <TextView
-         android:id="@+id/longitudetext"
+         android:id="@+id/destinationtext"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
-         android:text="@string/longitude"
-        />
-        <TextView
-        android:id="@+id/latitudetext"
-        android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:text="@string/latitude"
+         android:text=""
         />
     </LinearLayout>
 

@@ -26,6 +26,7 @@ import android.util.Log;
 public class AdventureMapView extends MapActivity {
 
     MapView mapView;
+    TextView destinationText;
 
     private String mode = "geohash";
     private Point userLocation;
@@ -65,6 +66,12 @@ public class AdventureMapView extends MapActivity {
         // the objective of the game .txt
     }
 
+    private void updateDestinationText() {
+        int bearing = (int) userLocation.bearingTo(geohashLocation);
+        int distance = (int) userLocation.distanceTo(geohashLocation);
+        destinationText.setText("You are in " +userLocation.PrettyPrint()+ "\nDestination is " + distance + " km from you, at " + bearing + "\u00b0");
+    }
+
     private void prepareLocationServices() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -96,6 +103,8 @@ public class AdventureMapView extends MapActivity {
             {
                 CenterLocation(geohashLocation);
             }
+
+            updateDestinationText();
         }
         catch (Exception e)
         {
@@ -109,6 +118,8 @@ public class AdventureMapView extends MapActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+        destinationText = (TextView) findViewById(R.id.destinationtext);
 
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
@@ -138,6 +149,8 @@ public class AdventureMapView extends MapActivity {
             {
                 updateGeohash();
             }
+
+            updateDestinationText();
         }
 
         public void onProviderDisabled(String provider) {
