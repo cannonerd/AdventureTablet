@@ -57,8 +57,8 @@ public class Geohash
     {
         DateFormat urlDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         DateFormat hashDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        urlDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
-        hashDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
+        //urlDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
+       // hashDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
         Date today = new Date();
 
         int td30 = 0;
