@@ -26,8 +26,17 @@ import com.wordpress.cannonerd.Geohash;
 
 import android.os.Bundle;
 import android.util.Log;
+/**
+ * Adventure Map View, the activities of drawing the map
+ * 
+ *
+ * @param      
+ * 
+ * @return information for the map
+ */
 
-public class AdventureMapView extends MapActivity {
+public class AdventureMapView extends MapActivity 
+    {
 
     MapView mapView;
     TextView destinationText;
@@ -46,43 +55,57 @@ public class AdventureMapView extends MapActivity {
 
     private static final String TAG = "AdventureTablet";
 
-    private void CenterLocation(Point centerPoint) {
+    private void CenterLocation(Point centerPoint) 
+    {
         mapController.animateTo(centerPoint);
     }
 
-    public void onDestinationClicked() {
+    public void onDestinationClicked() 
+    {
         // Center the map to geohash
         mode = "geohash";
 
-        if (geohashLocation != null) {
+        if (geohashLocation != null) 
+        {
             CenterLocation(geohashLocation);
         }
     }
     
-    public void onHomeClicked(){
+    public void onHomeClicked()
+    {
         // Center the map to player
         mode = "home";
 
-        if (userLocation != null) {
+        if (userLocation != null) 
+        {
             CenterLocation(userLocation);
         }
     }
 
-    public void onSettingsClicked(){
+    public void onSettingsClicked()
+    {
         //menu for changing icon for player or destination
     }
 
-    public void onAboutClicked(){
+    public void onAboutClicked()
+    {
         // the objective of the game .txt
     }
 
-    private void updateDestinationText() {
+    private void updateDestinationText() 
+    {
+        if (geohashLocation == null) 
+        {
+            return;
+        }
+
         int bearing = (int) userLocation.bearingTo(geohashLocation);
         int distance = (int) userLocation.distanceTo(geohashLocation);
         destinationText.setText("You are in " +userLocation.PrettyPrint()+ "\nDestination is " + distance + " km from you, at " + bearing + "\u00b0");
     }
 
-    private void prepareLocationServices() {
+    private void prepareLocationServices() 
+    {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new AdventureLocationListener();
@@ -103,7 +126,8 @@ public class AdventureMapView extends MapActivity {
 
         // Start with user's remembered location
         Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (lastLocation != null) {
+        if (lastLocation != null) 
+        {
             userLocation = new Point(
                 lastLocation.getLatitude(),
                 lastLocation.getLongitude()
@@ -112,8 +136,10 @@ public class AdventureMapView extends MapActivity {
         }
     }
 
-    private void updateGeohash() {
-        if (userLocation == null) {
+    private void updateGeohash() 
+    {
+        if (userLocation == null) 
+        {
             return;
         }
 
@@ -136,14 +162,17 @@ public class AdventureMapView extends MapActivity {
         }
     }
 
-    private void updatePlayerOnMap() {
-        if (userLocation == null) {
+    private void updatePlayerOnMap() 
+    {
+        if (userLocation == null) 
+        {
             // No user location, skip placing on map
             Log.d(TAG, "Skipping player update, no location");
             return;
         }
 
-        if (playerOverlay == null) {
+        if (playerOverlay == null) 
+        {
             // No overlay set, define
             Log.d(TAG, "Defining map overlay");
             Drawable drawable = this.getResources().getDrawable(R.drawable.red); 
@@ -151,7 +180,8 @@ public class AdventureMapView extends MapActivity {
     		mapView.getOverlays().add(playerOverlay);
         }
 
-        if (playerMarker != null) {
+        if (playerMarker != null) 
+        {
             Log.d(TAG, "Removing player marker");
             playerOverlay.removeItem(playerMarker);
         }
@@ -161,7 +191,8 @@ public class AdventureMapView extends MapActivity {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
@@ -175,7 +206,8 @@ public class AdventureMapView extends MapActivity {
 
         prepareLocationServices();
 
-        if (userLocation != null) {
+        if (userLocation != null) 
+        {
             updatePlayerOnMap();
 
             CenterLocation(userLocation);
@@ -184,9 +216,11 @@ public class AdventureMapView extends MapActivity {
         }
     }
 
-    private class AdventureLocationListener implements LocationListener {
+    private class AdventureLocationListener implements LocationListener 
+    {
 
-        public void onLocationChanged(Location argLocation) {
+        public void onLocationChanged(Location argLocation) 
+        {
             Point myPoint = new Point(
                 argLocation.getLatitude(),
                 argLocation.getLongitude()
@@ -195,7 +229,8 @@ public class AdventureMapView extends MapActivity {
             userLocation = myPoint;
             updatePlayerOnMap();
 
-            if (mode == "home") {
+            if (mode == "home") 
+            {
                 CenterLocation(userLocation);
             }
             else
@@ -206,36 +241,43 @@ public class AdventureMapView extends MapActivity {
             updateDestinationText();
         }
 
-        public void onProviderDisabled(String provider) {
+        public void onProviderDisabled(String provider) 
+        {
             // abstract. Method has to be here
         }
 
-        public void onProviderEnabled(String provider) {
+        public void onProviderEnabled(String provider) 
+        {
             // abstract. Method has to be here
         }
 
         public void onStatusChanged(String provider,
-        int status, Bundle extras) {
+        int status, Bundle extras) 
+        {
             // abstract. Method has to be here
         }
     }
 
     @Override
-    protected boolean isRouteDisplayed() {
+    protected boolean isRouteDisplayed() 
+    {
         return false;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) 
+    {
         // Handle item selection
-        switch (item.getItemId()) {
+        switch (item.getItemId()) 
+        {
             case R.id.destination:
                 onDestinationClicked();
                 return true;

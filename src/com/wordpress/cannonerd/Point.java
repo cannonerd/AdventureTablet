@@ -2,6 +2,14 @@ package com.wordpress.cannonerd;
 
 import com.google.android.maps.GeoPoint;
 
+/**
+ * Calculates userlocation- geohash location distances and bearing
+ * 
+ *
+ * @param   latitude, longitude   GPS positioning data
+ * 
+ * @return Bearing and distance
+ */
 public class Point extends GeoPoint
 {
     double lat;

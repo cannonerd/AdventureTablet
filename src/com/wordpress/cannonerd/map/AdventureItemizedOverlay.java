@@ -8,6 +8,15 @@ import java.util.List;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
+/**
+ * Draws the marker for the player
+ * 
+ *
+ * @param   gps positioning
+ * 
+ * @return marker for the player
+ */
+
 public class AdventureItemizedOverlay extends ItemizedOverlay {
     private List items;
 	private Drawable marker;
