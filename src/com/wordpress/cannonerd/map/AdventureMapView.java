@@ -11,6 +11,8 @@ import android.view.MenuItem;
 
 // Other widgets
 import android.widget.TextView;
+import android.app.Dialog;
+import android.widget.ImageView;
 
 // Map overlays
 import android.graphics.drawable.Drawable;
@@ -82,14 +84,25 @@ public class AdventureMapView extends MapActivity
         }
     }
 
-    public void onSettingsClicked()
-    {
+   // public void onSettingsClicked()
+   // {
         //menu for changing icon for player or destination
-    }
+   // }
 
     public void onAboutClicked()
     {
         // the objective of the game .txt
+        Dialog dialog = new Dialog(this);
+
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(true);
+        dialog.setTitle("Adventure Tablet");
+
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText("Adventure Tablet is a social adventure game for the real world. The main objective is to get out there and find new places. By taking part in Geohashes you can spike your life with a healthy dose of randomness.");
+        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+        image.setImageResource(R.drawable.icon);
+        dialog.show();
     }
 
     private void updateDestinationText() 
@@ -155,6 +168,13 @@ public class AdventureMapView extends MapActivity
             }
 
             updateDestinationText();
+            OverlayItem destinationMarker = new OverlayItem(geohashLocation, "Today's Geohash", geohashLocation.PrettyPrint());
+            Drawable iconFlag = this.getResources().getDrawable(R.drawable.lippu);
+            int w = iconFlag.getIntrinsicWidth();
+            int h = iconFlag.getIntrinsicHeight();
+            iconFlag.setBounds(-w / 2, -h, w / 2, 0);
+            destinationMarker.setMarker(iconFlag);
+            playerOverlay.addItem(destinationMarker);
         }
         catch (Exception e)
         {
@@ -283,9 +303,6 @@ public class AdventureMapView extends MapActivity
                 return true;
             case R.id.home:
                 onHomeClicked();
-                return true;
-            case R.id.settings:
-                onSettingsClicked();
                 return true;
             case R.id.about:
                 onAboutClicked();
