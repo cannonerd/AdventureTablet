@@ -28,13 +28,20 @@ import com.wordpress.cannonerd.Geohash;
 
 import android.os.Bundle;
 import android.util.Log;
+//settings
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Toast;
 /**
  * Adventure Map View, the activities of drawing the map
  * 
  *
- * @param      
+ * @param   UserLocation, Geohash, 
  * 
- * @return information for the map
+ * @return Map with player and Geohash markers. Updates on bearing and distance textboxes
  */
 
 public class AdventureMapView extends MapActivity 
@@ -84,10 +91,31 @@ public class AdventureMapView extends MapActivity
         }
     }
 
-   // public void onSettingsClicked()
-   // {
-        //menu for changing icon for player or destination
-   // }
+    public void onSettingsClicked()
+    {      
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
+        {
+            public void onClick(DialogInterface dialog, int whichButton) 
+            {
+                String value = input.getText().toString().trim();
+                Toast.makeText(getApplicationContext(), value,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() 
+                {
+                    public void onClick(DialogInterface dialog, int whichButton) 
+                    {
+                        dialog.cancel();
+                    }
+                });
+        alert.show();
+    }
+
 
     public void onAboutClicked()
     {
@@ -306,6 +334,9 @@ public class AdventureMapView extends MapActivity
                 return true;
             case R.id.about:
                 onAboutClicked();
+                return true;
+            case R.id.settings:
+                onSettingsClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

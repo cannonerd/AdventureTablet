@@ -18,14 +18,6 @@ import java.util.TimeZone;
  */
 public class Geohash
 {
-/**
- * Prepares URL fetching
- * 
- *
- * @param   URL   automatically read information
- * 
- * @return url
- */
     public static String fetchURL(String url) throws Exception 
     {
 	    URL address = new URL(url);
@@ -45,10 +37,10 @@ public class Geohash
         return result;
     }
 /**
- * Calculates the Geohash point using djia opening ands players location 
- * 
+ * Calculates the Geohash point using djia opening ands players location. 
+ * Takes to account the TD30 problem
  *
- * @param   getGeohash   Users location from GPS
+ * @param   getGeohash   Users location from GPS, DJIA opening
  * 
  * @return Point Geohash
  */
@@ -57,8 +49,6 @@ public class Geohash
     {
         DateFormat urlDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         DateFormat hashDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //urlDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
-       // hashDateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
         Date today = new Date();
 
         int td30 = 0;
