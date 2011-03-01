@@ -35,7 +35,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
-//import com.wordpress.cannonerd.QaikuActions;
+
+import android.content.SharedPreferences;
 /**
  * Adventure Map View, the activities of drawing the map
  * 
@@ -103,10 +104,16 @@ public class AdventureMapView extends MapActivity
             public void onClick(DialogInterface dialog, int whichButton) 
             {
                 String value = input.getText().toString().trim();
-                QaikuActions qaiku = new QaikuActions(value);
-                qaiku.checkApiKey();
-                Toast.makeText(getApplicationContext(), value,
+                if (saveApiKey(value)) {
+                    Toast.makeText(getApplicationContext(), "Uour Qaiku api-key is valid",
                         Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    // Toast "buu"
+                    Toast.makeText(getApplicationContext(), "Your Qaiku api-key is invalid",
+                        Toast.LENGTH_SHORT).show();
+                }
             }
         });
         alert.setNegativeButton("Cancel",
@@ -181,7 +188,26 @@ public class AdventureMapView extends MapActivity
             Log.d(TAG, "Initialized with user location " + userLocation.PrettyPrint());
         }
     }
+    public boolean saveApiKey(String apikey)
+    {
+        QaikuActions qaiku = new QaikuActions(apikey);
+        boolean keyOk = qaiku.checkApiKey();
+        if (!keyOk) {
+            return false;
+        }
 
+        SharedPreferences settings = getSharedPreferences("Qaiku", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("apikey", apikey);
+        return true;
+    }
+
+    public String loadApiKey()
+    {
+       SharedPreferences settings = getSharedPreferences("Qaiku", 0);
+       String apikey = settings.getString("apikey", "Write your APIkey here");  
+       return apikey;
+    }
     private void updateGeohash() 
     {
         if (userLocation == null) 

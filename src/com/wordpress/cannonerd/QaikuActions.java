@@ -12,10 +12,11 @@ public class QaikuActions
 {
     String apikey;
 
-    public QaikuActions(String apikey) {
+    public QaikuActions(String apikey) 
+    {
         this.apikey = apikey;
     }
-    private static final String TAG = "AdventureTablet";
+ 
 
     public static String fetchURL(String url) throws Exception 
     {
@@ -40,16 +41,14 @@ public class QaikuActions
     {
         try 
         {
-            Log.d(TAG, "true");
             String result = fetchURL("http://www.qaiku.com/api/statuses/user_timeline.json?apikey=" + this.apikey);
 
         } 
-        catch (Exception e) 
+        catch (Exception e)             // Your qaiku key is bonkers
         {
-            Log.d(TAG, "false");
-            // Your qaiku key is bonkers
             return false;
         }
         return true;
-    } 
+    }
+ 
 }
