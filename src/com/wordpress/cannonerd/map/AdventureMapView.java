@@ -98,6 +98,7 @@ public class AdventureMapView extends MapActivity
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Give your Qaiku api-key");
         final EditText input = new EditText(this);
+        input.setText(loadApiKey());
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
         {
@@ -105,12 +106,11 @@ public class AdventureMapView extends MapActivity
             {
                 String value = input.getText().toString().trim();
                 if (saveApiKey(value)) {
-                    Toast.makeText(getApplicationContext(), "Uour Qaiku api-key is valid",
+                    Toast.makeText(getApplicationContext(), "Your Qaiku api-key is valid",
                         Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    // Toast "buu"
                     Toast.makeText(getApplicationContext(), "Your Qaiku api-key is invalid",
                         Toast.LENGTH_SHORT).show();
                 }
@@ -199,13 +199,14 @@ public class AdventureMapView extends MapActivity
         SharedPreferences settings = getSharedPreferences("Qaiku", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("apikey", apikey);
+        editor.commit();
         return true;
     }
 
     public String loadApiKey()
     {
        SharedPreferences settings = getSharedPreferences("Qaiku", 0);
-       String apikey = settings.getString("apikey", "Write your APIkey here");  
+       String apikey = settings.getString("apikey", "");  
        return apikey;
     }
     private void updateGeohash() 
