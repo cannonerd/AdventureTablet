@@ -35,6 +35,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
+//import com.wordpress.cannonerd.QaikuActions;
 /**
  * Adventure Map View, the activities of drawing the map
  * 
@@ -94,6 +95,7 @@ public class AdventureMapView extends MapActivity
     public void onSettingsClicked()
     {      
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Give your Qaiku api-key");
         final EditText input = new EditText(this);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() 
@@ -101,6 +103,8 @@ public class AdventureMapView extends MapActivity
             public void onClick(DialogInterface dialog, int whichButton) 
             {
                 String value = input.getText().toString().trim();
+                QaikuActions qaiku = new QaikuActions(value);
+                qaiku.checkApiKey();
                 Toast.makeText(getApplicationContext(), value,
                         Toast.LENGTH_SHORT).show();
             }
@@ -114,6 +118,7 @@ public class AdventureMapView extends MapActivity
                     }
                 });
         alert.show();
+
     }
 
 
