@@ -37,6 +37,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import android.content.SharedPreferences;
+import java.util.Hashtable;
+import java.util.Enumeration;
+
 /**
  * Adventure Map View, the activities of drawing the map
  * 
@@ -53,7 +56,7 @@ public class AdventureMapView extends MapActivity
     TextView destinationText;
 
     private AdventureItemizedOverlay playerOverlay;
-    private OverlayItem playerMarker;
+    private Hashtable playerMarkers = new Hashtable();
 
     private String mode = "geohash";
     private Point userLocation;
@@ -285,15 +288,8 @@ public class AdventureMapView extends MapActivity
         }
     }
 
-    private void updatePlayerOnMap() 
+    private void updatePlayersOnMap()
     {
-        if (userLocation == null) 
-        {
-            // No user location, skip placing on map
-            Log.d(TAG, "Skipping player update, no location");
-            return;
-        }
-
         if (playerOverlay == null) 
         {
             // No overlay set, define
@@ -303,14 +299,47 @@ public class AdventureMapView extends MapActivity
     		mapView.getOverlays().add(playerOverlay);
         }
 
-        if (playerMarker != null) 
+        Hashtable playerLocations = new Hashtable();
+        if (!adventureId.equals(""))
         {
-            Log.d(TAG, "Removing player marker");
-            playerOverlay.removeItem(playerMarker);
+            // Update other players from Qaiku
+            String apikey = loadApiKey();
+            if (!apikey.equals("")) {
+                QaikuActions qaiku = new QaikuActions(apikey);
+                playerLocations = qaiku.getPlayerLocations(adventureId);
+            }
         }
 
-        playerMarker = new OverlayItem(userLocation, "You", "You are here");
+        if (userLocation != null) 
+        {
+            // FIXME: Instead of "You" we should get user's Qaiku username when we check apikey
+            playerLocations.put("You", userLocation);
+        }
+
+        if (playerLocations.size() == 0)
+        {
+            return;
+        }
+
+        Enumeration locationEnumerator = playerLocations.keys();
+        while (locationEnumerator.hasMoreElements()) {
+            String player = (String) locationEnumerator.nextElement();
+            Point playerLocation = (Point) playerLocations.get(player);
+            updatePlayerOnMap(player, playerLocation);
+        }   
+    }
+
+    private void updatePlayerOnMap(String player, Point location) 
+    {
+        if (playerMarkers.containsKey(player)) 
+        {
+            Log.d(TAG, "Removing player marker for " + player);
+            playerOverlay.removeItem((OverlayItem) playerMarkers.get(player));
+        }
+
+        OverlayItem playerMarker = new OverlayItem(location, player, player + " is here");
         playerOverlay.addItem(playerMarker);
+        playerMarkers.put(player, playerMarker);
     }
 
     @Override
@@ -331,7 +360,7 @@ public class AdventureMapView extends MapActivity
 
         if (userLocation != null) 
         {
-            updatePlayerOnMap();
+            updatePlayersOnMap();
 
             CenterLocation(userLocation);
 
@@ -350,7 +379,7 @@ public class AdventureMapView extends MapActivity
             );
 
             userLocation = myPoint;
-            updatePlayerOnMap();
+            updatePlayersOnMap();
 
             if (mode == "home") 
             {

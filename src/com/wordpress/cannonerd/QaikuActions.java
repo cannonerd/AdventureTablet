@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.entity.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import android.util.Log;
 
@@ -105,6 +106,61 @@ public class QaikuActions
         catch (Exception e) {
             return "";
         }
+    }
+
+    public Hashtable getPlayerLocations(String adventureId) {
+        String result = "";
+        try 
+        {
+            result = fetchURL("http://www.qaiku.com/api/statuses/replies/" + adventureId + ".json?apikey=" + this.apikey);
+
+        } 
+        catch (Exception e)
+        {
+            // Something went wrong with Qaiku
+            Log.d("QaikuActions", "Failed to read replies", e);
+            return new Hashtable();
+        }
+
+        Hashtable playerLocations = new Hashtable();
+        try
+        {
+            JSONArray messages = new JSONArray(result);
+            for (int i = 0; i < messages.length(); ++i) {
+                JSONObject message = messages.getJSONObject(i);
+                JSONObject player = message.getJSONObject("user");
+                if (playerLocations.containsKey(player.getString("screen_name"))) {
+                    // We already have latest location of player
+                    continue;
+                }
+
+                if (message.getString("data").equals("")) {
+                    // No QaikuData found, we need this for our adventure
+                    Log.d("QaikuActions", "Skipping empty data");
+                    continue;
+                }
+
+                String[] qaikudata = message.getString("data").split(",");
+                if (qaikudata.length != 3) {
+                    // Invalid mission coordinates, skip
+                    Log.d("QaikuActions", "Skipping data with wrong param count");
+                    continue;
+                }
+                
+                Point playerLocation = new Point(Double.parseDouble(qaikudata[0]), Double.parseDouble(qaikudata[1]));
+                Log.d("QaikuActions", "Setting player " + player.getString("screen_name") + " location to " + playerLocation.PrettyPrint());
+                playerLocations.put(player.getString("screen_name"), playerLocation);
+            }
+        }
+        catch (Exception e)
+        {
+            // Something went wrong with Qaiku
+            Log.d("QaikuActions", "Failed to parse replies", e);
+            return new Hashtable();
+        }
+
+
+        return playerLocations;
     }
 
     public Point[] getAdventures() {
