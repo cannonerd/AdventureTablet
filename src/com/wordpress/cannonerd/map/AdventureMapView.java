@@ -64,7 +64,11 @@ public class AdventureMapView extends MapActivity
 
     private MapController mapController;
 
+    private String adventureId = "";
+
     private static final String TAG = "AdventureTablet";
+
+    private boolean informedAboutQaiku = false;
 
     private void CenterLocation(Point centerPoint) 
     {
@@ -209,6 +213,7 @@ public class AdventureMapView extends MapActivity
        String apikey = settings.getString("apikey", "");  
        return apikey;
     }
+
     private void updateGeohash() 
     {
         if (userLocation == null) 
@@ -225,7 +230,7 @@ public class AdventureMapView extends MapActivity
             if (mode == "geohash")
             {
                 CenterLocation(geohashLocation);
-            }
+            }           
 
             updateDestinationText();
             OverlayItem destinationMarker = new OverlayItem(geohashLocation, "Today's Geohash", geohashLocation.PrettyPrint());
@@ -235,6 +240,44 @@ public class AdventureMapView extends MapActivity
             iconFlag.setBounds(-w / 2, -h, w / 2, 0);
             destinationMarker.setMarker(iconFlag);
             playerOverlay.addItem(destinationMarker);
+
+            String apikey = loadApiKey();
+            if (apikey.equals("")) {
+                return;
+            }
+
+            // Try to get adventure from Qaiku
+            QaikuActions qaiku = new QaikuActions(apikey);
+            Point[] adventures = qaiku.getAdventures();            
+            boolean adventureOnQaiku = false;
+            for (int i = 0; i < adventures.length; ++i) {
+                if (adventures[i] == null) {
+                    continue;
+                }
+                Log.d(TAG, "Found adventure " + adventures[i].PrettyPrint());
+
+                if (adventures[i].distanceTo(geohashLocation) <= 0.5)
+                {
+                    adventureId = adventures[i].getId();
+                    adventureOnQaiku = true;
+                    if (!informedAboutQaiku) {
+                        Toast.makeText(getApplicationContext(), "Today's geohash is already on Qaiku, join the adventure!", Toast.LENGTH_SHORT).show();
+                        informedAboutQaiku = true;
+                    }
+                    break;
+                }
+            }
+
+            if (!adventureOnQaiku) {
+                adventureId = qaiku.sendAdventure(geohashLocation);
+
+                if (!adventureId.equals("")) {
+                    if (!informedAboutQaiku) {
+                        Toast.makeText(getApplicationContext(), "Today's geohash is now on Qaiku, others may also join the adventure", Toast.LENGTH_SHORT).show();
+                        informedAboutQaiku = true;
+                    }
+                }
+            }
         }
         catch (Exception e)
         {
