@@ -12,9 +12,9 @@ import com.google.android.maps.GeoPoint;
  */
 public class Point extends GeoPoint
 {
-    double lat;
-    double lon;
-
+    public double lat;
+    public double lon;
+    private String id = "";
 
     public Point(double latitude, double longitude)
     {
@@ -26,6 +26,14 @@ public class Point extends GeoPoint
     public Point(int latitudeE6, int longitudeE6)
     {
         this((double) (latitudeE6 / 1E6), (double) (longitudeE6 / 1E6));
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
 /**
